@@ -34,6 +34,23 @@
   }
 }
 
+@keyframes blink {
+  0% {
+    opacity: 1; /* Fully visible at the start */
+  }
+  50% {
+    opacity: 0; /* Fully transparent at 50% of the animation */
+  }
+  100% {
+    opacity: 1; /* Fully visible again at the end */
+  }
+}
+
+
+.blinking-element {
+  animation: blink 2s infinite; /* Apply the 'blink' animation, lasting 2 seconds, and repeating infinitely */
+}
+
 
 
 .read-the-docs {

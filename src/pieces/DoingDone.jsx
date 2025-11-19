@@ -70,7 +70,7 @@ export default function DoingDone() {
                        }}
                    >
                        <div style={{ maxWidth: '60vw', margin: '0 auto' }}>
-                       <h1 style={{fontWeight: 'bold'}}>DOING DONE - PRODUCITVITY SOFTWARE SAAS</h1>
+                       <h1 style={{fontWeight: 'bold'}}>DOING DONE - PRODUCITVITY SOFTWARE SaaS</h1>
                        <br/>
                        <br/>
                        <br/>
@@ -131,7 +131,7 @@ export default function DoingDone() {
    
                    >
    
-                       <div style={{height: '100%', margin: '0 auto' }}>ddd
+                       <div style={{height: '100%', margin: '0 auto' }}>
                            
                             </div>
    

@@ -61,7 +61,7 @@ function PersistentUI() {
           zIndex: 10,
           overflow: 'hidden',
           backgroundColor: marqueeBg,
-          padding: '3vh',
+          padding: '1vh',
         }}
       >
         <div

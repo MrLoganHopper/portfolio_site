@@ -70,7 +70,7 @@ export default function DigiCache() {
                               }}
                           >
                               <div style={{ maxWidth: '60vw', margin: '0 auto' }}>
-                              <h1 style={{fontWeight: 'bold'}}>DigiCache - A CAMPUS WIDE DIGITAL GEOCACHING EXPERIENCE</h1>
+                              <h1 style={{fontWeight: 'bold'}}>DIGICACHE - A CAMPUS WIDE DIGITAL GEOCACHING EXPERIENCE</h1>
                               <br/>
                               <br/>
                               <br/>

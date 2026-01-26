@@ -6,23 +6,60 @@ import { useNavigate } from 'react-router-dom';
 
 // Preload the model for slightly faster loading
 useGLTF.preload('/WireBasket.glb');
+useGLTF.preload('Untitled.glb'); 
 
-export default function Model() {
+export default function Model({ onEnterSelect }) {
   const mesh = useRef();
+  const mesh2 = useRef();
+  const gltf2 = useGLTF('/Untitled.glb');
   const gltf = useGLTF('/WireBasket.glb');
   const groupRef = useRef();
   const [selected_box, setSelected_box] = React.useState(null);
   const [previous, setPrevious] = React.useState(null);
+  const [isDropping, setIsDropping] = React.useState(false);
+  const [dropTarget, setDropTarget] = React.useState(null);
+  const [selectedBoxShouldDrop, setSelectedBoxShouldDrop] = React.useState(false);
   const frameCount = useRef(0);
   const boxRefs = [useRef(), useRef(), useRef(), useRef(), useRef()];
   const texture = useTexture('/test.png');
   const navigationList = ["../pieces/DigiCache.jsx", "./pieces/CostaCritters.jsx",  "../pieces/Loganthons.jsx","../pieces/MerchDesigns.jsx", "../pieces/DoingDone.jsx" ];
   const navigate = useNavigate();
+  const [pauseLocation, setPauseLocation] = React.useState(false);
+
+
+
+  const dropanimation = async (targetIndex) => {
+    if (targetIndex === null) return;
+    onEnterSelect?.();           // notify Scene when Enter is used
+    setPauseLocation(true);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setIsDropping(true);
+    setDropTarget(targetIndex);
+    setSelectedBoxShouldDrop(false);
+    setTimeout(() => setSelectedBoxShouldDrop(true), 600);
+  };
+
+  // Handle navigation after drop animation completes
+  useEffect(() => {
+    if (isDropping && dropTarget !== null) {
+      const timer = setTimeout( () => {
+         // small delay
+        
+        setIsDropping(false);
+        setDropTarget(null);
+        setSelected_box(null);
+        setPrevious(null);
+        setSelectedBoxShouldDrop(false);
+        navigate(navigationList[dropTarget]);
+      }, 1000); // 1 second for the drop animation
+      return () => clearTimeout(timer);
+    }
+  }, [isDropping, dropTarget]);
 
 
 
     useEffect(() => {
-    const handleKeyDown = (event) => {
+    const handleKeyDown = async (event) => {
       if (selected_box === null) {
         // On first key press, select the highest index box
         setSelected_box(boxRefs.length - 1);
@@ -36,7 +73,7 @@ export default function Model() {
         setPrevious(selected_box);
         setSelected_box((prev) => Math.max(prev - 1, 0));
       } else if (event.key === 'Enter' && selected_box !== null) {
-        navigate(navigationList[selected_box]);
+        dropanimation(selected_box);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -48,6 +85,40 @@ export default function Model() {
 
 
   useFrame(() => {
+    // Handle drop animation - all boxes fall down and basket rotates
+    if (isDropping && dropTarget !== null) {
+      // Drop all boxes in world space (global Y axis)
+      boxRefs.forEach((ref, idx) => {
+        if (ref.current && groupRef.current) {
+          // Keep selected box up until delay passes
+          if (idx === dropTarget && !selectedBoxShouldDrop) {
+            return; // Skip this box for now
+          }
+          
+          // Get world position
+          const worldPos = new THREE.Vector3();
+          ref.current.getWorldPosition(worldPos);
+          
+          // Move down in world space
+          worldPos.y -= 0.5;
+          
+          // Convert back to local position relative to parent
+          ref.current.parent.worldToLocal(worldPos);
+          ref.current.position.copy(worldPos);
+        }
+      });
+
+      if(mesh.current && groupRef.current) {
+        // Same for the basket mesh
+        const worldPos = new THREE.Vector3();
+        mesh.current.getWorldPosition(worldPos);
+        worldPos.y -= 0.5;
+        mesh.current.parent.worldToLocal(worldPos);
+        mesh.current.position.copy(worldPos);
+      }
+      return;
+    }
+
     if (selected_box === null) {
    
       // No box selected: all boxes at default y
@@ -94,17 +165,38 @@ export default function Model() {
   });
 
 
+  var a = 0
+  var b = 0
+  var c = 0
+
+
   useFrame((state) => {
         frameCount.current++;
         const delta = state.clock.getDelta();
 
     // Rotate the model slowly around the Y axis
-    if (groupRef.current) {
+    if (groupRef.current ) {
         const time = state.clock.elapsedTime;
+        
+        if(!isDropping && !pauseLocation) {
         groupRef.current.rotation.y +=  0.005; // Rotate at 0.2 radians per second
         groupRef.current.rotation.x = Math.sin(time / 4) / 2;
         groupRef.current.rotation.z = Math.cos(time / 4) / 2;
         groupRef.current.position.y = (-2 + Math.sin(time * 1)) / 20;
+        }
+        else {
+          // During drop, lower the basket
+           a = groupRef.current.rotation.x;
+          b = groupRef.current.rotation.y;
+          c = groupRef.current.rotation.z;
+
+
+          groupRef.current.rotation.y = b;
+          groupRef.current.rotation.x = a;
+          groupRef.current.rotation.z = c;
+
+
+        }
     }
   });
 
@@ -121,6 +213,9 @@ export default function Model() {
     <group ref ={groupRef} rotation={[0.3, 0, 0]} name = "0">
     
     <primitive ref={mesh} object={gltf.scene} position={[0, -1, 0]} scale={1}  />
+    
+<primitive ref={boxRefs[2]} object={gltf2.scene} position={[0, -0.3, -0.5]} rotation={[-0.5, Math.PI /2, Math.PI ]} scale={1}  />
+
     <mesh ref={boxRefs[0]} position={[0, -0.3, -1.1]} rotation={[-0.5, 0, 0]} name="0">
         <boxGeometry args={[1.4, 1.4, 0.1]} />
          <MeshTransmissionMaterial 
@@ -141,24 +236,28 @@ export default function Model() {
 </mesh>
 
 
+
 <mesh ref={boxRefs[1]} position={[0, -0.3, -0.8]} rotation={[-0.5, 0, 0]} name="1">
         <boxGeometry args={[1.4, 1.4, 0.1]} />
          <meshBasicMaterial color={"#00e2a2"} transparent={true} />
 </mesh>
 
-<mesh ref={boxRefs[2]} position={[0, -0.3, -0.5]} rotation={[-0.5, 0, 0]} name="2">
-        <boxGeometry args={[1.4, 1.4, 0.1]} />
-        <meshBasicMaterial color={"#ff9100"}  />
-</mesh>
+
+
 
 <mesh ref={boxRefs[3]} position={[0, -0.3, -0.2]} rotation={[-0.5, 0, 0]} name="3">
         <boxGeometry args={[1.4, 1.4, 0.1]} />
         <meshBasicMaterial color={"#f564cd"}  />
 </mesh>
 
+
+
 <mesh ref={boxRefs[4]} position={[0, -0.3 , 0.1]} rotation={[-0.5, 0, 0]} name="4">
         <boxGeometry args={[1.4, 1.4, 0.1]} />
-        <meshBasicMaterial color={"#b7ff00"}  />
+        <meshBasicMaterial 
+        
+        
+        color={"#b7ff00"}  />
 </mesh>
 
 

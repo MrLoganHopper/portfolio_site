@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -9,6 +9,7 @@ import DigiCache from './pieces/DigiCache.jsx'
 import DoingDone from './pieces/DoingDone.jsx'
 import MerchDesigns from './pieces/MerchDesigns.jsx'
 import Loganthons from './pieces/Loganthons.jsx'
+import LoadingScreen from './LoadingScreen.jsx'
 
 
 
@@ -16,7 +17,11 @@ function App() {
   const [count, setCount] = useState(0);
   const [musicOn, setMusicOn] = useState(false);
   const audioRef = useRef(null);
+  const [loading, setLoading] = useState(true);
 
+  const handleLoadingComplete = () => {
+    setLoading(false);
+  };
 
   const handleMusicToggle = () => {
     setMusicOn((prev) => {
@@ -44,6 +49,8 @@ function App() {
 
   return (
     <>
+    <LoadingScreen isLoading={loading} onLoadingComplete={handleLoadingComplete} />
+    {!loading && (
     <Router>
       {/* Overlayed moving text */}
       <div
@@ -142,6 +149,7 @@ function App() {
         <Route path="/pieces/Loganthons.jsx" element={<Loganthons />} />
       </Routes>
       </Router>
+    )}
 
     </>
   );

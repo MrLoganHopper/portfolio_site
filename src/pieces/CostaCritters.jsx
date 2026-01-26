@@ -135,45 +135,67 @@ export default function CostaCritters() {
                            </div>
   
                             <br/>
-                      <br/>
-                      <br/>
-                      <br/>
-                       <br/>
-                      <br/>
-                      <br/>
-                      <br/>
-                       <br/>
-                      <br/>
-                      <br/>
-                      <br/>
-                       <br/>
-                      <br/>
-                      <br/>
-                      <br/>
-                       <br/>
-                      <br/>
-                      <br/>
-                      <br/>
-                       <br/>
-                      <br/>
-                      <br/>
-                      <br/>
-                       <br/>
-                      <br/>
-                      <br/>
-                      <br/>
-                       <br/>
-                      <br/>
-                      <br/>
-                      <br/>
-                       <br/>
-                      <br/>
-                      <br/>
-                      <br/>
-                       <br/>
-                      <br/>
-                      <br/>
-                      <br/>
+                        <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+          
+                              <div style={{height: '40vw', width: "70vw",   margin: '0 auto', backgroundColor: '#64f5cd', padding: '1rem', borderRadius: '20px', marginLeft: '9.5vw' }}>
+                                    <video
+                                      src="/project_images/costa_critters/costa_critters_vid.mp4"
+                                      autoPlay
+                                      loop
+                                      muted
+                                      playsInline
+
+                                      style={{ width: '100%', height: '100%', display: 'block', margin: '0 auto', borderRadius: '20px' }}
+                                    >
+                                      Your browser does not support the video tag.
+                                    </video>
+                                </div>
+          
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+
+                            <div style={{ width: '90vw', margin: '0 auto', textAlign: 'left', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', backgroundColor: '#4100f5',  borderRadius: '20px', marginLeft: '1vw' }}>
+                                
+                                
+                                <div style={{ width: '90vw', margin: '0 auto', textAlign: 'left', display: 'flex', flexDirection: 'row', alignItems: 'flex-start', backgroundColor: '#4100f5',  borderRadius: '20px', marginLeft: '1vw' }}>
+
+                                    <div style={{height: '40vw', width: "40vw", margin: '0 auto', backgroundColor: '#64f5cd', padding: '1rem', borderRadius: '20px' }}>
+                                        <img src="/project_images/costa_critters/costa_critters_vid.png" alt="digicache1" style={{ height: '100%', display: 'block', margin: '0 auto', borderRadius: '20px' }} />
+                                    </div>
+                                    
+                                    <br/>
+
+                                    <div style={{height: '40vw', width: "40vw", margin: '0 auto', backgroundColor: '#64f5cd', padding: '1rem', borderRadius: '20px', marginTop: '30vw' }}>
+                                        <img src="/project_images/digicache/Justin.png" alt="digicache1" style={{ height: '100%', display: 'block', margin: '0 auto', borderRadius: '20px' }} />
+                                    </div>
+
+                                </div>
+
+
+                                <div style={{ width: '90vw', margin: '0 auto', textAlign: 'left', display: 'flex', flexDirection: 'row', alignItems: 'flex-start',   borderRadius: '20px', marginLeft: '1vw', marginTop: '-10vw' }}>
+
+                                    <div style={{height: '40vw', width: "40vw", margin: '0 auto', backgroundColor: '#64f5cd', padding: '1rem', borderRadius: '20px' }}>
+                                        <img src="/project_images/digicache/usingdigicache.jpeg" alt="digicache1" style={{ height: '100%', display: 'block', margin: '0 auto', borderRadius: '20px' }} />
+                                    </div>
+                                    
+                                    <br/>
+
+                                    <div style={{height: '40vw', width: "40vw", margin: '0 auto', backgroundColor: '#64f5cd', padding: '1rem', borderRadius: '20px', marginTop: '30vw' }}>
+                                        <img src="/project_images/digicache/digicachesamuel.png" alt="digicache1" style={{ height: '100%', display: 'block', margin: '0 auto', borderRadius: '20px' }} />
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                              <br/>
   
   
                   </div>

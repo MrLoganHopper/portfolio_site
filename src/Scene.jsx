@@ -12,13 +12,27 @@ import { useLocation } from 'react-router-dom';
 
 export default function Scene() {
   const [hovered, setHovered] = useState({ left: false, right: false, enter: false });
- const [first, setFirst] = useState(true);
-
+  const [first, setFirst] = useState(true);
   const [clicked, setClicked] = useState(false);
-  const [enterClicked, setEnterClicked] = useState(true)
+  const [enterClicked, setEnterClicked] = useState(true);
+  const [isEntered, setIsEntered] = useState(false);
+  const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
+  const location = useLocation();
+  const resetTimer = useRef(null);
+  const projects = [
+    "",
+    'DOING DONE',
+    'MERCH DESIGNS',
+    'LOGANTHON',
+    'COSTA CRITTERS',
+    'DIGICACHE',
+  ];
 
-
-   
+  // Reset on mount (or whenever the route changes)
+  useEffect(() => {
+    setIsEntered(false);
+    if (resetTimer.current) clearTimeout(resetTimer.current);
+  }, [location.pathname]);
 
   // Helper to dispatch synthetic keydown event
   const dispatchKey = (key) => {
@@ -28,6 +42,18 @@ export default function Scene() {
       setClicked(true);
     }
   };
+
+  const handleEnterSelect = () => {
+    setIsEntered(true); // show overlay while dropping
+    if (resetTimer.current) clearTimeout(resetTimer.current);
+    resetTimer.current = setTimeout(() => setIsEntered(false), 2500); // drop duration + buffer
+  };
+
+useEffect(() => {
+    
+    setIsEntered(false);
+    if (resetTimer.current) clearTimeout(resetTimer.current);
+  }, [location.pathname]);
 
 
 
@@ -42,21 +68,25 @@ export default function Scene() {
   
         if (event.key === 'ArrowRight') {
           setClicked(true);
+          setCurrentProjectIndex((prev) => Math.min(prev + 1, projects.length - 1));
+
+          
           if (first) {
             setEnterClicked(false);
-          setTimeout(() => {
-            setEnterClicked(true);
-          
-          }, 6000); // Reset clicked state after 1 second
+            setTimeout(() => {
+              setEnterClicked(true);
+            }, 6000); // Reset clicked state after 1 second
         }
-          setFirst(false);
-        } else if (event.key === 'Enter' && clicked) {
-          setEnterClicked(true);
-        }
-      };
-      window.addEventListener('keydown', handleKeyDown);
-      return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [clicked]);
+        setFirst(false);
+      } else if (event.key === 'ArrowLeft') {
+        setCurrentProjectIndex((prev) => prev === 1 ? 1: Math.max(prev - 1, 0));
+      } else if (event.key === 'Enter' && clicked) {
+        setEnterClicked(true);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [clicked, first, projects.length]);
 
 
 
@@ -71,13 +101,13 @@ export default function Scene() {
 
 const handleRightArrowClick = () => {
   setClicked(true);
- 
+  setCurrentProjectIndex((prev) => Math.min(prev + 1, projects.length - 1));
   if(first) {
-  setTimeout(() => {
-    setEnterClicked(false);
-    setEnterClicked(true);
-  }, 6000); // Reset clicked state after 1 second
-}
+    setTimeout(() => {
+      setEnterClicked(false);
+      setEnterClicked(true);
+    }, 6000); // Reset clicked state after 1 second
+  }
   setFirst(false);
 }
 
@@ -102,6 +132,10 @@ useEffect(() => {
 
 
   return (
+
+  
+
+
     <main
       style={{
         position: 'fixed', // or 'absolute'
@@ -109,20 +143,43 @@ useEffect(() => {
         left: 0,
         width: '100vw',
         height: '100vh',
-        zIndex: 1,
+        zIndex: 0,
       }}
     >
-      <div>
+      <div
+        style={{
+          backgroundColor: '#4100f5',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          zIndex: isEntered ? 11 : 0,
+        }}
+      />
+
+      <div
+        style={{
+          position: 'fixed',
+          bottom: '2vh',
+          left: '2vw',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          width: '220px',
+          height: '150px',
+          zIndex: 2,
+          gap: '0.5rem',
+        }}
+      >
         {/* Enter key image */}
         <img className={enterClicked ? "" : "blinking-element"}
           src="/enterkey.png"
           alt="enter key"
           style={{
-            position: 'absolute',
-            bottom: '16vh',
-            right: '78vw',
             height: hovered.enter ? '80px' : '70px',
             zIndex: 2,
+            alignSelf: 'flex-end',
             transition: 'height 0.2s',
             cursor: 'pointer',
           }}
@@ -131,16 +188,15 @@ useEffect(() => {
           onClick={() => dispatchKey('Enter')}
         />
         {/* Left arrow key image */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', flexDirection: 'row' }}>
         <img
           src="/arrowkey.png"
           alt="arrow keys"
           style={{
-            position: 'absolute',
-            bottom: '7vh',
-            left: '7vw',
             height: hovered.left ? '80px' : '70px',
             zIndex: 2,
             transition: 'height 0.2s',
+            alignSelf: 'flex-start',
             cursor: 'pointer',
           }}
           onMouseEnter={() => setHovered((h) => ({ ...h, left: true }))}
@@ -152,9 +208,6 @@ useEffect(() => {
           src="/arrowkey.png"
           alt="arrow keys"
           style={{
-            position: 'absolute',
-            bottom: '7vh',
-            right: '78vw',
             height: hovered.right ? '80px' : '70px',
             zIndex: 2,
             transition: 'height 0.2s',
@@ -166,24 +219,48 @@ useEffect(() => {
           onMouseLeave={() => setHovered((h) => ({ ...h, right: false }))}
           onClick={() => [dispatchKey('ArrowRight'), handleRightArrowClick()]}
         />
+        </div>
       </div>
 
-      <Canvas camera={{ position: [0, 0, 6], fov: 50 }} style={{ width: '100vw', height: '100vh', background: '#4100f5' }} gl={{ clearColor: '#0a1a2f' }}>
+
+      <div style={{zIndex:2, width: '500px', height: '70px', position: 'fixed', position: 'fixed',
+          top: 'calc(10vh + 100px)', right: '12vw', color: '#cdf564', fontSize: '40px', alignItems: 'center', justifyContent: 'center', textAlign: 'right', fontFamily: 'Helvetica, Arial, sans-serif', fontWeight: "bold"}}>
+        {projects[currentProjectIndex]}
+      </div>
+
+          <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 1 }}>
+          <Canvas camera={{ position: [0, 0, 6], fov: 50 }} style={{ width: '100vw', height: '100vh', background: '#4100f5' }} gl={{ clearColor: '#0a1a2f' }}>
+          <directionalLight position={[0, 3, 2]} intensity={3} />
+        <ambientLight intensity={0.5} />
+
+
+        <Environment preset="city" />
+
+        <MaiaMakes />
+          </Canvas>
+
+          </div>
+
+          <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: isEntered ? 12 : 1 }}>
+
+
+      <Canvas camera={{ position: [0, 0, 6], fov: 50 }} style={{ width: '100vw', height: '100vh',  }} gl={{ clearColor: '#0a1a2f' }}>
         <directionalLight position={[0, 3, 2]} intensity={3} />
         <ambientLight intensity={0.5} />
 
 
         <Environment preset="city" />
         
-        <MaiaMakes />
+      
          
-        <Model  />
+        <Model onEnterSelect={handleEnterSelect} style={{"zIndex": isEntered ? 12 : 0}} />
         {/* Post-processing: bloom for glow + subtle noise/vignette */}
         
        
           
        
       </Canvas>
+      </div>
 
   </main>
   );

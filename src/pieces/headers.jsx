@@ -1,11 +1,11 @@
-import React, { useRef, useEffect, useState} from 'react';
+import React, { useRef, useEffect, useState, use} from 'react';
 import { Box, useGLTF, useTexture, MeshTransmissionMaterial } from '@react-three/drei';
 import {useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useNavigate } from 'react-router-dom';
 import { Text } from '@react-three/drei';
 
-
+useGLTF.preload('/Untitled.glb');
 
 export default function Header(props) {
      const groupRef = useRef();
@@ -15,6 +15,7 @@ export default function Header(props) {
         const texture = useTexture('/test.png');
         const boxRef = useRef();
         const frameCount = useRef(0);
+        const gltf = useGLTF('/Untitled.glb');
     
         useEffect(() => {
             const handleMouseMove = (event) => {
@@ -45,9 +46,9 @@ export default function Header(props) {
             // Rotate the model slowly around the Y axis
             if (boxRef.current) {
                 const time = state.clock.elapsedTime;
-                boxRef.current.rotation.y +=  -0.005; // Rotate at 0.2 radians per second
-                boxRef.current.rotation.x = Math.sin(time / 4) / 2;
-                boxRef.current.rotation.z = Math.cos(time / 4) / 2;
+                boxRef.current.rotation.y =  (boxRef.current.rotation.y - 0.005); // Rotate at 0.2 radians per second
+                boxRef.current.rotation.x = (Math.sin(time / 4) / 2) - Math.PI / 7;
+                boxRef.current.rotation.z = (Math.cos(time / 4) / 2) + Math.PI;
                 boxRef.current.position.y = (-2 + Math.sin(time * 1)) / 20;
             }
           });
@@ -69,10 +70,10 @@ export default function Header(props) {
             </Text>
         </group>
      
-
-        <mesh ref={boxRef} position={[0, 100, 4]} rotation={[0, 0, Math.PI / 4]} name="1">
-        <boxGeometry args={[1.4, 1.4, 0.1]} />
         {props.istransparent ?
+        
+    <mesh ref={boxRef} position={[0, 100, 4]} rotation={[0, 0, Math.PI / 4]} name="1">
+        <boxGeometry args={[1.4, 1.4, 0.1]} />
         <MeshTransmissionMaterial 
                     thickness={0.8}
                     transmission={0.95}
@@ -87,10 +88,12 @@ export default function Header(props) {
                     resolution={500} // Reduced desktop resolution from 256 to 128
                     background={new THREE.Color("#4100f5")}
                 />
-            :
-        <meshBasicMaterial  color={props.color} />
-        }
-            </mesh>
+</mesh>
+                :
+                <primitive ref={boxRef} object={gltf.scene} position={[0, 100, 4]} rotation={[0, Math.PI /2 , Math.PI ]} scale={1}  />
+    }
+
+
             </>
     );
 }

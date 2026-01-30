@@ -25,22 +25,27 @@ export default function Scene() {
   const [clicked, setClicked] = useState(false);
   const [enterClicked, setEnterClicked] = useState(true);
   const [isEntered, setIsEntered] = useState(false);
-  const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
+  const [currentProjectIndex, setCurrentProjectIndex] = useState(null);
   const [assetsLoaded, setAssetsLoaded] = useState(false);
   const location = useLocation();
   const resetTimer = useRef(null);
+  
+  // Match the order in Model.jsx navigationList
+  // boxRefs[0] = DigiCache, boxRefs[1] = CostaCritters, boxRefs[2] = Loganthons, boxRefs[3] = MerchDesigns, boxRefs[4] = DoingDone
   const projects = [
-    "",
-    'DOING DONE',
-    'MERCH DESIGNS',
-    'LOGANTHON',
-    'COSTA CRITTERS',
-    'DIGICACHE',
+    'DIGICACHE',      // index 0 = boxRefs[0]
+    'COSTA CRITTERS', // index 1 = boxRefs[1]
+    'LOGANTHON',      // index 2 = boxRefs[2]
+    'MERCH DESIGNS',  // index 3 = boxRefs[3]
+    'DOING DONE',     // index 4 = boxRefs[4]
   ];
 
   // Reset on mount (or whenever the route changes)
   useEffect(() => {
     setIsEntered(false);
+    setCurrentProjectIndex(null); // Reset project index
+    setFirst(true); // Reset first click state
+    setClicked(false); // Reset clicked state
     if (resetTimer.current) clearTimeout(resetTimer.current);
   }, [location.pathname]);
 
@@ -78,10 +83,10 @@ useEffect(() => {
   
         if (event.key === 'ArrowRight') {
           setClicked(true);
-          // Start at index 5 on first click, then decrement
+          // First click selects boxRefs[4] (highest index)
           setCurrentProjectIndex((prev) => {
-            if (prev === 0) return 5; // First click goes to last project (DigiCache)
-            return Math.max(prev - 1, 1);
+            if (prev === null) return 4; // First click = DoingDone (boxRefs[4])
+            return Math.max(prev - 1, 0); // Decrement to move through array
           });
 
           
@@ -94,8 +99,8 @@ useEffect(() => {
         setFirst(false);
       } else if (event.key === 'ArrowLeft') {
         setCurrentProjectIndex((prev) => {
-          if (prev === 0 || prev === 1) return 1; // Can't go left from first project
-          return Math.min(prev + 1, 5);
+          if (prev === null) return null;
+          return Math.min(prev + 1, 4); // Increment but cap at 4
         });
       } else if (event.key === 'Enter' && clicked) {
         setEnterClicked(true);
@@ -117,18 +122,14 @@ useEffect(() => {
 
 
 const handleRightArrowClick = () => {
-  setClicked(true);
-  setCurrentProjectIndex((prev) => {
-    if (prev === 0) return 5;
-    return Math.max(prev - 1, 1);
-  });
-  if(first) {
+  // Don't call dispatchKey here, just let the click handler dispatch the event
+  // This prevents double-firing
+  if (first) {
+    setEnterClicked(false);
     setTimeout(() => {
-      setEnterClicked(false);
       setEnterClicked(true);
-    }, 6000); // Reset clicked state after 1 second
+    }, 6000);
   }
-  setFirst(false);
 }
 
 const handleEnterClick = () => {
@@ -233,15 +234,15 @@ useEffect(() => {
           }}
           onMouseEnter={() => setHovered((h) => ({ ...h, right: true }))}
           onMouseLeave={() => setHovered((h) => ({ ...h, right: false }))}
-          onClick={() => [dispatchKey('ArrowRight'), handleRightArrowClick()]}
+          onClick={() => { dispatchKey('ArrowRight'); handleRightArrowClick(); }}
         />
         </div>
       </div>
 
 
-      <div style={{zIndex:2, width: '500px', height: '70px', position: 'fixed', position: 'fixed',
+      <div style={{zIndex:2, width: '500px', height: '70px', position: 'fixed',
           top: 'calc(10vh + 100px)', right: '12vw', color: '#cdf564', fontSize: '40px', alignItems: 'center', justifyContent: 'center', textAlign: 'right', fontFamily: 'Helvetica, Arial, sans-serif', fontWeight: "bold"}}>
-        {projects[currentProjectIndex]}
+        {currentProjectIndex !== null ? projects[currentProjectIndex] : ''}
       </div>
 
           <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 1 }}>

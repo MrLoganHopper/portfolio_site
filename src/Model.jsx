@@ -214,8 +214,16 @@ export default function Model({ onEnterSelect }) {
     
     <primitive ref={mesh} object={gltf.scene} position={[0, -1, 0]} scale={1}  />
     
+      
+      {/* THIS IS THE ONE THAT WE WANT IM JUST COMMENTING IT BC I DONT HAVE THE OTHER VINYLS
+
+
 <primitive ref={boxRefs[2]} object={gltf2.scene} position={[0, -0.3, -0.5]} rotation={[-0.5, Math.PI /2, Math.PI ]} scale={1}  />
 
+
+
+
+*/}
     <mesh ref={boxRefs[0]} position={[0, -0.3, -1.1]} rotation={[-0.5, 0, 0]} name="0">
         <boxGeometry args={[1.4, 1.4, 0.1]} />
          <MeshTransmissionMaterial 
@@ -248,6 +256,12 @@ export default function Model({ onEnterSelect }) {
 <mesh ref={boxRefs[3]} position={[0, -0.3, -0.2]} rotation={[-0.5, 0, 0]} name="3">
         <boxGeometry args={[1.4, 1.4, 0.1]} />
         <meshBasicMaterial color={"#f564cd"}  />
+</mesh>
+
+
+<mesh ref={boxRefs[2]} position={[0, -0.3, -0.5]} rotation={[-0.5, 0, 0 ]} name="2">
+        <boxGeometry args={[1.4, 1.4, 0.1]} />
+        <meshBasicMaterial color={"#f5a641"}  />
 </mesh>
 
 

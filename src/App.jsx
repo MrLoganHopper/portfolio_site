@@ -9,7 +9,6 @@ import DigiCache from './pieces/DigiCache.jsx'
 import DoingDone from './pieces/DoingDone.jsx'
 import MerchDesigns from './pieces/MerchDesigns.jsx'
 import Loganthons from './pieces/Loganthons.jsx'
-import LoadingScreen from './LoadingScreen.jsx'
 
 
 
@@ -49,7 +48,6 @@ function App() {
 
   return (
     <>
-    <LoadingScreen isLoading={loading} onLoadingComplete={handleLoadingComplete} />
     {!loading && (
     <Router>
       {/* Overlayed moving text */}

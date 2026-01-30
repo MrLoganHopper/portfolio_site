@@ -9,7 +9,7 @@ import DigiCache from './pieces/DigiCache.jsx';
 import DoingDone from './pieces/DoingDone.jsx';
 import MerchDesigns from './pieces/MerchDesigns.jsx';
 import Loganthons from './pieces/Loganthons.jsx';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 function PersistentUI() {
   const location = useLocation();
@@ -213,8 +213,47 @@ function PersistentUI() {
 }
 
 function MainRouter() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate minimum loading time and wait for assets
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000); // Minimum 2 seconds, adjust as needed
+    
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <Router>
+      {isLoading && (
+        <div style={{
+          height: '100vh',
+          width: '100vw',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          pointerEvents: 'none',
+          zIndex: 9999,
+          backgroundColor: "#4400ff",
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}>
+          <video
+            src="/loader.mp4"
+            autoPlay
+            loop
+            muted
+            style={{
+              width: '50%',
+              height: '50%',
+              objectFit: 'cover',
+              pointerEvents: 'none',
+            }}
+          />
+        </div>
+      )}
       <PersistentUI />
       <Routes>
         <Route path="/" element={<Scene />} />

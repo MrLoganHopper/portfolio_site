@@ -6,6 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import { Text } from '@react-three/drei';
 
 useGLTF.preload('/Untitled.glb');
+useGLTF.preload('/Vinyl.glb');
+useGLTF.preload('/DoingDoneVinyl.glb');
+useGLTF.preload('/CostaCrittersVinyl.glb');
+useGLTF.preload('/MerchVinyl.glb');
 
 export default function Header(props) {
      const groupRef = useRef();
@@ -16,6 +20,45 @@ export default function Header(props) {
         const boxRef = useRef();
         const frameCount = useRef(0);
         const gltf = useGLTF('/Untitled.glb');
+        const vinylGltf = useGLTF('/Vinyl.glb');
+        const doingDoneVinylGltf = useGLTF('/DoingDoneVinyl.glb');
+        const costaCrittersVinylGltf = useGLTF('/CostaCrittersVinyl.glb');
+        const merchVinylGltf = useGLTF('/MerchVinyl.glb');
+
+        // Extract geometry from vinyl model
+        const vinylGeometry = React.useMemo(() => {
+            let geometry = null;
+            vinylGltf.scene.traverse((child) => {
+                if (child.isMesh && !geometry) {
+                    geometry = child.geometry;
+                }
+            });
+            return geometry;
+        }, [vinylGltf]);
+    
+        // Clone vinyl scene for transmission material
+        const clonedVinyl = React.useMemo(() => vinylGltf.scene.clone(), [vinylGltf]);
+
+        // Apply MeshTransmissionMaterial to cloned vinyl
+        useEffect(() => {
+            if (clonedVinyl && props.istransparent) {
+                clonedVinyl.traverse((child) => {
+                    if (child.isMesh) {
+                        // Store the original geometry
+                        const geo = child.geometry;
+                        // Create new material with transmission properties
+                        child.material = new THREE.MeshPhysicalMaterial({
+                            transmission: 0.95,
+                            thickness: 0.8,
+                            roughness: 0.2,
+                            ior: 1.5,
+                            reflectivity: 0.3,
+                            transparent: true,
+                        });
+                    }
+                });
+            }
+        }, [clonedVinyl, props.istransparent]);
     
         useEffect(() => {
             const handleMouseMove = (event) => {
@@ -47,7 +90,7 @@ export default function Header(props) {
             if (boxRef.current) {
                 const time = state.clock.elapsedTime;
                 boxRef.current.rotation.y =  (boxRef.current.rotation.y - 0.005); // Rotate at 0.2 radians per second
-                boxRef.current.rotation.x = (Math.sin(time / 4) / 2) - Math.PI / 7;
+                boxRef.current.rotation.x = (Math.sin(time / 4) / 2) - Math.PI / 7 + (props.istransparent ? Math.PI / 3 : 0);
                 boxRef.current.rotation.z = (Math.cos(time / 4) / 2) + Math.PI;
                 boxRef.current.position.y = (-2 + Math.sin(time * 1)) / 20;
             }
@@ -70,11 +113,15 @@ export default function Header(props) {
             </Text>
         </group>
      
-        {props.istransparent ?
-        
-    <mesh ref={boxRef} position={[0, 100, 4]} rotation={[0, 0, Math.PI / 4]} name="1">
-        <boxGeometry args={[1.4, 1.4, 0.1]} />
-        <MeshTransmissionMaterial 
+        {props.istransparent ? (
+            <mesh 
+                ref={boxRef} 
+                geometry={vinylGeometry}
+                position={[0, 100, 4]} 
+                rotation={[Math.PI / 2, Math.PI / 4, 0]}
+                scale={1.3}
+            >
+                <MeshTransmissionMaterial 
                     thickness={0.8}
                     transmission={0.95}
                     roughness={0.2}
@@ -84,16 +131,20 @@ export default function Header(props) {
                     anisotropy={0.1}
                     reflectivity={0.3}
                     backside={true}
-                    samples={6} // Reduced desktop samples from 4 to 2
-                    resolution={500} // Reduced desktop resolution from 256 to 128
+                    samples={6}
+                    resolution={500}
                     background={new THREE.Color("#4100f5")}
                 />
-</mesh>
-                :
-                <primitive ref={boxRef} object={gltf.scene} position={[0, 100, 4]} rotation={[0, Math.PI /2 , Math.PI ]} scale={1}  />
-    }
-
-
-            </>
+            </mesh>
+        ) : (
+            <primitive 
+                ref={boxRef} 
+                object={props.text === "Doing Done" ? doingDoneVinylGltf.scene : props.text === "Costa Critters" ? costaCrittersVinylGltf.scene : props.text === "Merch Designs" ? merchVinylGltf.scene : vinylGltf.scene} 
+                position={[0, 100, 4]} 
+                rotation={[0, Math.PI / 2, 0]} 
+                scale={1.3}
+            />
+        )}
+        </>
     );
 }

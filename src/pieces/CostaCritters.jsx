@@ -167,31 +167,63 @@ export default function CostaCritters() {
                                 <div style={{ width: '90vw', margin: '0 auto', textAlign: 'left', display: 'flex', flexDirection: 'row', alignItems: 'flex-start', backgroundColor: '#4100f5',  borderRadius: '20px', marginLeft: '1vw' }}>
 
                                     <div style={{height: '40vw', width: "40vw", margin: '0 auto', backgroundColor: '#64f5cd', padding: '1rem', borderRadius: '20px' }}>
-                                        <img src="/project_images/costa_critters/costa_critters_vid.png" alt="digicache1" style={{ height: '100%', display: 'block', margin: '0 auto', borderRadius: '20px' }} />
+                                        <img src="/project_images/costa_critters/Boxes.png" alt="digicache1" style={{ height: '100%', display: 'block', margin: '0 auto', borderRadius: '20px' }} />
                                     </div>
                                     
                                     <br/>
 
                                     <div style={{height: '40vw', width: "40vw", margin: '0 auto', backgroundColor: '#64f5cd', padding: '1rem', borderRadius: '20px', marginTop: '30vw' }}>
-                                        <img src="/project_images/digicache/Justin.png" alt="digicache1" style={{ height: '100%', display: 'block', margin: '0 auto', borderRadius: '20px' }} />
+                                        <img src="/project_images/costa_critters/Spot.png" alt="digicache1" style={{ height: '100%', display: 'block', margin: '0 auto', borderRadius: '20px' }} />
                                     </div>
 
                                 </div>
 
+                                <div style = {{ width: "80vw", height: "40vw", margin: '0 auto', backgroundColor: '#64f5cd', padding: '1rem', borderRadius: '20px', marginTop: '5vw' , marginBottom: '5vw', marginLeft: '5vw' }}>
+                                    <img src = "/project_images/costa_critters/MidThree.png" alt="flyer" style={{ width: '70vw', display: 'block', margin: '0 auto', borderRadius: '20px' }} />
+                                </div>
 
-                                <div style={{ width: '90vw', margin: '0 auto', textAlign: 'left', display: 'flex', flexDirection: 'row', alignItems: 'flex-start',   borderRadius: '20px', marginLeft: '1vw', marginTop: '-10vw' }}>
+                                <div style={{ width: '90vw', margin: '0 auto', textAlign: 'left', display: 'flex', flexDirection: 'row', alignItems: 'flex-start',   borderRadius: '20px', marginLeft: '1vw' }}>
+
+                                    <div style={{height: '40vw', width: "40vw", margin: '0 auto', backgroundColor: '#64f5cd', padding: '1rem', borderRadius: '20px', marginTop: '30vw' }}>
+                                        <img src="/project_images/costa_critters/IRL_Flyer.png" alt="digicache1" style={{ height: '100%', display: 'block', margin: '0 auto', borderRadius: '20px' }} />
+                                    </div>
+                                    
+                                    <br/>
 
                                     <div style={{height: '40vw', width: "40vw", margin: '0 auto', backgroundColor: '#64f5cd', padding: '1rem', borderRadius: '20px' }}>
-                                        <img src="/project_images/digicache/usingdigicache.jpeg" alt="digicache1" style={{ height: '100%', display: 'block', margin: '0 auto', borderRadius: '20px' }} />
+                                        <img src="/project_images/costa_critters/Flyer.png" alt="digicache1" style={{ height: '100%', display: 'block', margin: '0 auto', borderRadius: '20px' }} />
+                                    </div>
+
+                                </div>
+
+                                <div style = {{ width: "80vw", height: "40vw", margin: '0 auto', backgroundColor: '#64f5cd', padding: '1rem', borderRadius: '20px', marginTop: '5vw' , marginBottom: '5vw', marginLeft: '5vw' }}>
+                                    <img src = "/project_images/costa_critters/EarlyFlyers.png" alt="flyer" style={{ width: '70vw', display: 'block', margin: '0 auto', borderRadius: '20px' }} />
+                                </div>
+
+
+                                <div style={{ width: '90vw', margin: '0 auto', textAlign: 'left', display: 'flex', flexDirection: 'row', alignItems: 'flex-start', backgroundColor: '#4100f5',  borderRadius: '20px', marginLeft: '1vw' }}>
+
+                                    <div style={{height: '40vw', width: "40vw", margin: '0 auto', backgroundColor: '#64f5cd', padding: '1rem', borderRadius: '20px' }}>
+                                        <img src="/project_images/costa_critters/EarlyBox.png" alt="digicache1" style={{ height: '100%', display: 'block', margin: '0 auto', borderRadius: '20px' }} />
                                     </div>
                                     
                                     <br/>
 
                                     <div style={{height: '40vw', width: "40vw", margin: '0 auto', backgroundColor: '#64f5cd', padding: '1rem', borderRadius: '20px', marginTop: '30vw' }}>
-                                        <img src="/project_images/digicache/digicachesamuel.png" alt="digicache1" style={{ height: '100%', display: 'block', margin: '0 auto', borderRadius: '20px' }} />
+                                        <img src="/project_images/costa_critters/Lockers.png" alt="digicache1" style={{ height: '100%', display: 'block', margin: '0 auto', borderRadius: '20px' }} />
                                     </div>
 
                                 </div>
+
+
+                                <div style = {{ width: "80vw", height: "40vw", margin: '0 auto', backgroundColor: '#64f5cd', padding: '1rem', borderRadius: '20px', marginTop: '5vw' , marginBottom: '5vw', marginLeft: '5vw' }}>
+                                    <img src = "/project_images/costa_critters/Users.png" alt="flyer" style={{ width: '70vw', display: 'block', margin: '0 auto', borderRadius: '20px' }} />
+                                </div>
+
+
+
+
+
 
 
                             </div>

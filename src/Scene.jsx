@@ -1,14 +1,23 @@
 import React, { use, useEffect, useState, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import Model from './Model';
-import { Environment } from '@react-three/drei';
+import { Environment, useProgress } from '@react-three/drei';
 import MaiaMakes from './MaiaMakes.jsx';
 import "./App.css"
 import { useLocation } from 'react-router-dom';
 
 
-
-
+function LoadingDetector({ onLoaded }) {
+  const { active, progress } = useProgress();
+  
+  useEffect(() => {
+    if (!active && progress === 100) {
+      onLoaded();
+    }
+  }, [active, progress, onLoaded]);
+  
+  return null;
+}
 
 export default function Scene() {
   const [hovered, setHovered] = useState({ left: false, right: false, enter: false });
@@ -17,6 +26,7 @@ export default function Scene() {
   const [enterClicked, setEnterClicked] = useState(true);
   const [isEntered, setIsEntered] = useState(false);
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
+  const [assetsLoaded, setAssetsLoaded] = useState(false);
   const location = useLocation();
   const resetTimer = useRef(null);
   const projects = [
@@ -132,13 +142,9 @@ useEffect(() => {
 
 
   return (
-
-  
-
-
     <main
       style={{
-        position: 'fixed', // or 'absolute'
+        position: 'fixed',
         top: 0,
         left: 0,
         width: '100vw',
@@ -230,6 +236,7 @@ useEffect(() => {
 
           <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 1 }}>
           <Canvas camera={{ position: [0, 0, 6], fov: 50 }} style={{ width: '100vw', height: '100vh', background: '#4100f5' }} gl={{ clearColor: '#0a1a2f' }}>
+          <LoadingDetector onLoaded={() => setAssetsLoaded(true)} />
           <directionalLight position={[0, 3, 2]} intensity={3} />
         <ambientLight intensity={0.5} />
 
@@ -242,10 +249,9 @@ useEffect(() => {
           </div>
 
           <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: isEntered ? 12 : 1 }}>
-
-
-      <Canvas camera={{ position: [0, 0, 6], fov: 50 }} style={{ width: '100vw', height: '100vh',  }} gl={{ clearColor: '#0a1a2f' }}>
-        <directionalLight position={[0, 3, 2]} intensity={3} />
+          <Canvas camera={{ position: [0, 0, 6], fov: 50 }} style={{ width: '100vw', height: '100vh',  }} gl={{ clearColor: '#0a1a2f' }}>
+          <LoadingDetector onLoaded={() => setAssetsLoaded(true)} />
+          <directionalLight position={[0, 3, 2]} intensity={3} />
         <ambientLight intensity={0.5} />
 
 

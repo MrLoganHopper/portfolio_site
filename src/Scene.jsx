@@ -78,7 +78,11 @@ useEffect(() => {
   
         if (event.key === 'ArrowRight') {
           setClicked(true);
-          setCurrentProjectIndex((prev) => Math.min(prev + 1, projects.length - 1));
+          // Start at index 5 on first click, then decrement
+          setCurrentProjectIndex((prev) => {
+            if (prev === 0) return 5; // First click goes to last project (DigiCache)
+            return Math.max(prev - 1, 1);
+          });
 
           
           if (first) {
@@ -89,7 +93,10 @@ useEffect(() => {
         }
         setFirst(false);
       } else if (event.key === 'ArrowLeft') {
-        setCurrentProjectIndex((prev) => prev === 1 ? 1: Math.max(prev - 1, 0));
+        setCurrentProjectIndex((prev) => {
+          if (prev === 0 || prev === 1) return 1; // Can't go left from first project
+          return Math.min(prev + 1, 5);
+        });
       } else if (event.key === 'Enter' && clicked) {
         setEnterClicked(true);
       }
@@ -111,7 +118,10 @@ useEffect(() => {
 
 const handleRightArrowClick = () => {
   setClicked(true);
-  setCurrentProjectIndex((prev) => Math.min(prev + 1, projects.length - 1));
+  setCurrentProjectIndex((prev) => {
+    if (prev === 0) return 5;
+    return Math.max(prev - 1, 1);
+  });
   if(first) {
     setTimeout(() => {
       setEnterClicked(false);

@@ -80,56 +80,42 @@ useEffect(() => {
 
    useEffect(() => {
       const handleKeyDown = (event) => {
-  
-        if (event.key === 'ArrowRight') {
+        // First keypress: set to DOING DONE for ANY key
+        if (currentProjectIndex === null) {
           setClicked(true);
-          // First click selects boxRefs[4] (highest index)
-          setCurrentProjectIndex((prev) => {
-            if (prev === null) return 4; // First click = DoingDone (boxRefs[4])
-            return Math.max(prev - 1, 0); // Decrement to move through array
-          });
-
-          
+          setCurrentProjectIndex(4); // DOING DONE
           if (first) {
             setEnterClicked(false);
             setTimeout(() => {
               setEnterClicked(true);
-            }, 6000); // Reset clicked state after 1 second
+            }, 6000);
+            setFirst(false);
+          }
+          return; // Exit early, don't process specific keys yet
         }
-        setFirst(false);
-      } else if (event.key === 'ArrowLeft') {
-        setCurrentProjectIndex((prev) => {
-          if (prev === null) return null;
-          return Math.min(prev + 1, 4); // Increment but cap at 4
-        });
-      } else if (event.key === 'Enter' && clicked) {
-        setEnterClicked(true);
-      }
+
+        // After first keypress, handle specific navigation keys
+        if (event.key === 'ArrowRight') {
+          setClicked(true);
+          setCurrentProjectIndex((prev) => Math.max(prev - 1, 0));
+        } else if (event.key === 'ArrowLeft') {
+          setCurrentProjectIndex((prev) => Math.min(prev + 1, 4));
+        } else if (event.key === 'Enter' && clicked) {
+          setEnterClicked(true);
+        }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [clicked, first, projects.length]);
+  }, [clicked, first, currentProjectIndex]);
 
-
-
-    
-
-
-
-
-
-
-
-
-const handleRightArrowClick = () => {
-  // Don't call dispatchKey here, just let the click handler dispatch the event
-  // This prevents double-firing
-  if (first) {
-    setEnterClicked(false);
-    setTimeout(() => {
-      setEnterClicked(true);
-    }, 6000);
-  }
+  const handleRightArrowClick = () => {
+    if (first) {
+      setEnterClicked(false);
+      setTimeout(() => {
+        setEnterClicked(true);
+      }, 6000);
+      setFirst(false);
+    }
 }
 
 const handleEnterClick = () => {
